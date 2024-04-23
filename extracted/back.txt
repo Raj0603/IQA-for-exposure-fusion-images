@@ -1,0 +1,91 @@
+import pandas as pd
+import requests
+from io import BytesIO
+from PIL import Image
+
+# Read the CSV file
+df = pd.read_csv("filtered_output.csv")
+
+# Iterate over each row
+for index, row in df.iterrows():
+    url = row['images/Image_URL']
+    if url.startswith(('http://', 'https://')):
+        try:
+            # Send a GET request to download the image
+            response = requests.get(url)
+            if response.status_code == 200:
+                # Read the image from the response content
+                img = Image.open(BytesIO(response.content))
+                
+                # Save the image to a file
+                img_path = f"image_{index}.jpg"  # You can change the file format if needed
+                img.save(img_path)
+                
+                # Update the row with the image path
+                df.at[index, 'image_path'] = img_path
+            else:
+                print(f"Failed to download image from {url}")
+        except Exception as e:
+            print(f"Error downloading image from {url}: {e}")
+    else:
+        print(f"Invalid URL: {url}")
+
+# Save the updated DataFrame to a new CSV file
+df.to_csv("final_output.csv", index=False)
+
+
+
+
+
+
+
+import pandas as pd
+
+# Read the CSV file
+df = pd.read_csv("output.csv")
+
+# Filter rows where the URL starts with "http://" or "https://"
+df = df[df['images/Image_URL'].str.startswith(('http://', 'https://'))]
+
+# Save the filtered DataFrame to a new CSV file
+df.to_csv("filtered_output.csv", index=False)
+
+
+
+
+
+
+import pandas as pd
+import requests
+from io import BytesIO
+from PIL import Image
+
+# Read the CSV file
+df = pd.read_csv("filtered_output.csv")
+
+# Iterate over each row
+for index, row in df.iterrows():
+    url = row['images/Image_URL']
+    if url.startswith(('http://', 'https://')):
+        try:
+            # Send a GET request to download the image
+            response = requests.get(url)
+            if response.status_code == 200:
+                # Read the image from the response content
+                img = Image.open(BytesIO(response.content))
+                
+                # Save the image to a file
+                img_path = f"image_{index}.jpg"  # You can change the file format if needed
+                img.save(img_path)
+                
+                # Update the row with the image path
+                df.at[index, 'image_path'] = img_path
+            else:
+                print(f"Failed to download image from {url}")
+        except Exception as e:
+            print(f"Error downloading image from {url}: {e}")
+    else:
+        print(f"Invalid URL: {url}")
+
+# Save the updated DataFrame to a new CSV file
+df.to_csv("final_output.csv", index=False)
